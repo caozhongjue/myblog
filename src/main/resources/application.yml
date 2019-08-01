@@ -1,0 +1,12 @@
+server:
+  port: 8080
+# 引入thymeleaf模板
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/  #模板前缀
+    check-template-location: true #检查模板位置
+    suffix: .html    #模板后缀
+    encoding: utf-8  #模板编码方式
+    cache: false
+
+
