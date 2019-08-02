@@ -10,6 +10,7 @@ public class Index {
     @RequestMapping("/")
     public String index(@RequestParam(name = "name" )String name , Model model) {
         model.addAttribute("name",name);
+
         return "index";
     }
 
