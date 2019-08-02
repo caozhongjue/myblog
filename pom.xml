@@ -8,22 +8,20 @@
         <version>2.1.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.caozhongjue</groupId>
+    <groupId>top.caozhongjue</groupId>
     <artifactId>myblog</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>myblog</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
         <!--springboot web-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -33,7 +31,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
         <!--引入thymeleaf模板引擎-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -41,7 +38,6 @@
         </dependency>
 
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -50,5 +46,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
