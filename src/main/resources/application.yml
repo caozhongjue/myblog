@@ -6,3 +6,10 @@ spring:
     cache: false
     encoding: UTF-8
     mode: HTML
+#自定义属性值  @Value("${}")取值
+github:
+  client:
+    id: Iv1.e73e751aed387889
+    secret: a047b90c7d5b6de3bbd035c4af962482bae0177c
+  redirect:
+    uri: http://localhost:8080/callback
