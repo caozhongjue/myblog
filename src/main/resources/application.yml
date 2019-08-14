@@ -6,6 +6,17 @@ spring:
     cache: false
     encoding: UTF-8
     mode: HTML
+# 开启热布署
+  devtools:
+    restart:
+      enabled: true  #设置开启热部署
+#数据源
+  datasource:
+    url: jdbc:h2:~/test
+    driver-class-name: org.h2.Driver
+    password: root
+    username: root
+
 #自定义属性值  @Value("${}")取值
 github:
   client:
@@ -13,3 +24,6 @@ github:
     secret: a047b90c7d5b6de3bbd035c4af962482bae0177c
   redirect:
     uri: http://localhost:8080/callback
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
