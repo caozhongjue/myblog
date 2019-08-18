@@ -58,8 +58,13 @@ public class PublishController {
         question.setDescription(description);
         question.setTags(tags);
         question.setCreator(user.getId());
-        question.setGmtCreate(System.currentTimeMillis());
-        question.setGmtModified(question.getGmtCreate());
+//        question.setGmtCreate(System.currentTimeMillis());
+//        question.setGmtModified(question.getGmtCreate());
+        question.setGmtCreate(Long.toString(System.currentTimeMillis()));//Long类型转String
+        question.setGmtModified(Long.parseLong(question.getGmtCreate()));//String转Long类型
+        question.setCommentCount(0);
+        question.setLikeCount(0);
+        question.setViewCount(0);
         questionMapper.create(question);
         return "redirect:/";
     }

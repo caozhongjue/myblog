@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=divice-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 </head>
 <body>
     <div th:fragment="copy">
@@ -37,13 +38,15 @@
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="#">我的问题</a></li>
+                                <li><a href="/profile/questions">我的问题</a></li>
                                 <li><a href="#">个人中心</a></li>
                                 <li><a href="#">退出登录</a></li>
                             </ul>
                         </li>
                         <li th:if="${session.user==null}">
-                            <a href="https://github.com/login/oauth/authorize?client_id=Iv1.e73e751aed387889&redirect_uri=http://localhost:8080/callback&scope=user">登录</a></li>
+                            <a href="https://github.com/login/oauth/authorize?client_id=Iv1.a6bed9fa305789a7&state=1&redirect_uri=http://localhost:8080/callback&scope=user">登录</a></li>
+<!--                        <a href="https://github.com/login/oauth/authorize?client_id=Iv1.e73e751aed387889&state=1&redirect_uri=http://blog.caozhongjue.top/callback&scope=user">登录</a>-->
+                        </li>
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->

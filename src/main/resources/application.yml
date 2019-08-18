@@ -12,18 +12,29 @@ spring:
       enabled: true  #设置开启热部署
 #数据源
   datasource:
-    url: jdbc:h2:~/test
-    driver-class-name: org.h2.Driver
-    password: root
+#    url: jdbc:h2:~/test
+#    driver-class-name: org.h2.Driver
+#    password: root
+#    username: root
+
     username: root
+    password: gznc865958
+    url: jdbc:mysql://localhost:3306/myblog?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.jdbc.Driver
 
 #自定义属性值  @Value("${}")取值
 github:
   client:
-    id: Iv1.e73e751aed387889
-    secret: a047b90c7d5b6de3bbd035c4af962482bae0177c
+# 本地测试用的
+    id: Iv1.a6bed9fa305789a7
+    secret: 4c552e17c30fe421401fd6d846a84e99803d19c6
+# 上线用的
+#    id: Iv1.e73e751aed387889
+#    secret: a047b90c7d5b6de3bbd035c4af962482bae0177c
   redirect:
     uri: http://localhost:8080/callback
+#    上线地址
+#    uri: http://blog.caozhongjue.top/callback
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

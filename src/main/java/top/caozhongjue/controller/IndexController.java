@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import top.caozhongjue.dao.QuestionMapper;
 import top.caozhongjue.dao.UserMapper;
 import top.caozhongjue.dto.PaginationDTO;
@@ -33,7 +34,7 @@ public class IndexController {
     @RequestMapping("/")
     public String index(HttpServletRequest request,
                         Model model,@RequestParam(value = "page",defaultValue = "1")Integer page,
-                        @RequestParam(value = "size",defaultValue = "2")Integer size) {
+                        @RequestParam(value = "size",defaultValue = "5")Integer size) {
         Cookie[] cookies = request.getCookies();
         if(cookies!=null){
             for(Cookie cookie :cookies){
@@ -51,5 +52,28 @@ public class IndexController {
         PaginationDTO paginationDTO = questionService.listQuestionDTO(page,size);
         model.addAttribute("paginationDTO",paginationDTO);
         return "index";
+    }
+    @ResponseBody
+    @RequestMapping("/main")
+    public PaginationDTO main(HttpServletRequest request,
+                        Model model,@RequestParam(value = "page",defaultValue = "1")Integer page,
+                        @RequestParam(value = "size",defaultValue = "10")Integer size) {
+        Cookie[] cookies = request.getCookies();
+        if(cookies!=null){
+            for(Cookie cookie :cookies){
+                if(cookie.getName().equals("token")){
+                    String token = cookie.getValue();
+                    User user = userMapper.findByToken(token);
+                    if(user!=null){
+                        request.getSession().setAttribute("user",user);
+                    }
+                    break;
+                }
+            }
+        }
+//      List<QuestionDTO> listQuestions = questionService.listQuestionDTO(page,size);
+        PaginationDTO paginationDTO = questionService.listQuestionDTO(page,size);
+
+        return paginationDTO;
     }
 }

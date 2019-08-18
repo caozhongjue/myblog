@@ -10,6 +10,7 @@ import top.caozhongjue.pojo.Access_token;
 import top.caozhongjue.pojo.GithubUser;
 import top.caozhongjue.pojo.User;
 import top.caozhongjue.provider.GitHubProvider;
+import top.caozhongjue.services.UserService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -31,14 +32,18 @@ public class AuthorizenController {
     private String redirecturi;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
+                           @RequestParam(name="state")String state,
                            HttpServletRequest request,
                            HttpServletResponse response){
         Access_token access_token = new Access_token();//封装一个token实体类，存值
         access_token.setCode(code);
         access_token.setRedirect_uri(redirecturi);
+        access_token.setState(state);
         access_token.setClient_id(clientid);
         access_token.setClient_secret(clientsecret);
         String stoken = gitHubProvider.getAccess_token(access_token);//获取stoken方法，返回stoken
@@ -50,10 +55,8 @@ public class AuthorizenController {
             user.setAccountId(String.valueOf(githubUser.getId()));
             String token = UUID.randomUUID().toString();
             user.setToken(token);
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUser.getAvatarUrl());
-            userMapper.insert(user);//传入参数
+            userService.createOrUpdateUser(user);
             response.addCookie(new Cookie("token",token));
             //request.getSession().setAttribute("user",githubUser);
             return "redirect:/"; //redirect重定向到哪个路径

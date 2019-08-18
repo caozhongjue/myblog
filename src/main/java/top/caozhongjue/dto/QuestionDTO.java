@@ -9,7 +9,7 @@ public class QuestionDTO {
     private String title;
     private String description;
     private String tags;
-    private Long gmtCreate;
+    private String gmtCreate;
     private Long gmtModified;
     private Integer creator;
     private Integer viewCount;
