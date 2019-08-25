@@ -52,7 +52,7 @@ public class QuestionService {
     public PaginationDTO list(Integer userId, Integer page, Integer size) {
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         PaginationDTO paginationDTOS = new PaginationDTO();
-        Integer totalCount = questionMapper.count();
+        Integer totalCount = questionMapper.count2();
         paginationDTOS.setPagination(totalCount,page,size);
         //防止超过页数据还显示
         if (page<1){
@@ -74,5 +74,9 @@ public class QuestionService {
         paginationDTOS.setQuestions(questionDTOList);
         //return questionDTOList;
         return paginationDTOS;
+    }
+
+    public Question selectQuestionById(Integer id) {
+        return questionMapper.selectQuestionById(id);
     }
 }

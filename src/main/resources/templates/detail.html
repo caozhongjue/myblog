@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>czj'blog</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=divice-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+</head>
+<link rel="stylesheet" type="text/css" href="css/editormd.css">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+
+<script type="text/javascript" src="js/editormd.js"></script>
+<script src="lib/marked.min.js"></script>
+<script src="lib/prettify.min.js"></script>
+
+<script src="lib/raphael.min.js"></script>
+<script src="lib/underscore.min.js"></script>
+<script src="lib/sequence-diagram.min.js"></script>
+<script src="lib/flowchart.min.js"></script>
+<script src="lib/jquery.flowchart.min.js"></script>
+<!--<script type="text/javascript" src="js/bootstrap.min.js"></script>-->
+<!--<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">-->
+<!--<link type="text/css" rel="stylesheet" href="css/bootstrap-theme.min.css">-->
+<!--最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!--可选的 Bootstrap 主题文件（一般不用引入） -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
+      integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<!--最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<body style="background-color: #efefef">
+<div style="margin: auto;">
+    <div th:insert="navigation::copy"></div>
+    <div class="container-fluid" style="background-color: white">
+        <div class="row" style="height: 100%;">
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                    <h2 th:text="${question.title}"></h2>
+                    <label >问题内容(详细问题内容):</label>
+                    <div id="test-editormd-view">
+                        <textarea id="append-test" style="display:none;" th:text="${question.description}"></textarea>
+
+                    </div>
+            </div>
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                <h3>问题发起指南</h3>
+                问题标题:请用精简的语言描述您发布的问题,不超过25字,问题补充:详细补充您的问题内容,并确保问题描述清析直观.ok
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function() {
+            var testEditormdView;
+
+            testEditormdView = editormd.markdownToHTML("test-editormd-view", {
+                htmlDecode      : "style,script,iframe",  // you can filter tags decode
+                emoji           : true,
+                taskList        : true,
+                tex             : true,  // 默认不解析
+                flowChart       : true,  // 默认不解析
+                sequenceDiagram : true,  // 默认不解析
+            });
+        })</script>
+
+</body>
+</html>

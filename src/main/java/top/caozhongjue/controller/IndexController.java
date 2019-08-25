@@ -25,7 +25,6 @@ import java.util.List;
 public class IndexController {
     @Autowired
     private UserMapper userMapper;
-
     @Autowired
     private QuestionMapper questionMapper;
     @Autowired
@@ -34,7 +33,7 @@ public class IndexController {
     @RequestMapping("/")
     public String index(HttpServletRequest request,
                         Model model,@RequestParam(value = "page",defaultValue = "1")Integer page,
-                        @RequestParam(value = "size",defaultValue = "5")Integer size) {
+                        @RequestParam(value = "size",defaultValue = "10")Integer size) {
         Cookie[] cookies = request.getCookies();
         if(cookies!=null){
             for(Cookie cookie :cookies){
@@ -53,27 +52,12 @@ public class IndexController {
         model.addAttribute("paginationDTO",paginationDTO);
         return "index";
     }
-    @ResponseBody
-    @RequestMapping("/main")
-    public PaginationDTO main(HttpServletRequest request,
-                        Model model,@RequestParam(value = "page",defaultValue = "1")Integer page,
-                        @RequestParam(value = "size",defaultValue = "10")Integer size) {
-        Cookie[] cookies = request.getCookies();
-        if(cookies!=null){
-            for(Cookie cookie :cookies){
-                if(cookie.getName().equals("token")){
-                    String token = cookie.getValue();
-                    User user = userMapper.findByToken(token);
-                    if(user!=null){
-                        request.getSession().setAttribute("user",user);
-                    }
-                    break;
-                }
-            }
-        }
-//      List<QuestionDTO> listQuestions = questionService.listQuestionDTO(page,size);
-        PaginationDTO paginationDTO = questionService.listQuestionDTO(page,size);
-
-        return paginationDTO;
+    //首页中按id显示数据
+    @RequestMapping("/indexSelectQuestionById")
+    public String selectQuestionById(Model model,@RequestParam("id")Integer id){
+        Question question = questionService.selectQuestionById(id);
+        model.addAttribute("question",question);
+        return "detail";
     }
+
 }

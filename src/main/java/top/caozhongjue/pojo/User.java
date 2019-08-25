@@ -11,5 +11,7 @@ public class User {
     private Long gmtCreate;
     private Long gmtModified;
     private String avatarUrl;
-
+    private String city;
+    private String gender;
+    private String province;
 }

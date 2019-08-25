@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import top.caozhongjue.dao.UserMapper;
 import top.caozhongjue.pojo.Access_token;
 import top.caozhongjue.pojo.GithubUser;
@@ -63,5 +64,12 @@ public class AuthorizenController {
         }else{
             return "redirect:/";
         }
+    }
+    @RequestMapping("/onLogin")
+    @ResponseBody
+    public void onLogin(@RequestParam("code")String code
+                       ){
+        System.out.println(code);
+
     }
 }

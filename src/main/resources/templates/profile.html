@@ -5,7 +5,7 @@
     <title th:text="${sectionName}"></title>
 </head>
 
-<script type="text/javascript" th:src="@{/js/jquery-3.4.1.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=divice-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <link type="text/css" rel="stylesheet" th:href="@{/css/index.css}">
@@ -34,7 +34,9 @@
                         </a>
                     </div>
                     <div class="media-body">
-                        <h4 class="media-heading" th:text="${listQuestion.title}"></h4>
+                        <a th:href="@{'/indexSelectQuestionById?id='+${listQuestion.id}}">
+                            <h4 class="media-heading" th:text="${listQuestion.title}"></h4>
+                        </a>
                         <span class="textdesc" th:text="${listQuestion.description}"></span><br>
                         <span class="text_des" >
                                     <!--th:text="${#dates.format(${listQuestion.gmtCreate,'yyyy-dd-MM')-->
@@ -45,35 +47,35 @@
                     <ul class="pagination">
                         <!--第一页-->
                         <li th:if="${pagination.hasFirstPage}">
-                            <a href="/?page=1" aria-label="Previous" >
+                            <a href="/profile/question/?page=1" aria-label="Previous" >
                                 <span aria-hidden="true">&lt;&lt;</span>
                             </a>
                         </li>
                         <!--上一页-->
                         <li th:if="${pagination.hasPrevious}">
-                            <a th:href="@{/(page=${(pagination.currentPage)-1})}" aria-label="Previous">
+                            <a th:href="@{/profile/question/(page=${(pagination.currentPage)-1})}" aria-label="Previous">
                                 <span aria-hidden="true">&lt;</span>
                             </a>
                         </li>
                         <li th:each="page : ${pagination.pages}"  th:class="${pagination.currentPage==page}?'active':'' " >
-                            <a th:href="@{/(page=${page})}" th:text="${page}"></a>
+                            <a th:href="@{/profile/question/(page=${page})}" th:text="${page}"></a>
                         </li>
                         <!--下一页-->
                         <li th:if="${pagination.hasNexts}">
-                            <a th:href="@{/(page=${(pagination.currentPage)+1})}" aria-label="Next">
+                            <a th:href="@{/profile/question/(page=${(pagination.currentPage)+1})}" aria-label="Next">
                                 <span aria-hidden="true">&gt;</span>
                             </a>
                         </li>
                         <!--最后一页-->
                         <li th:if="${pagination.hasEndPage}">
-                            <a th:href="@{/(page=${pagination.totalPages})}" aria-label="Next">
+                            <a th:href="@{/profile/question/(page=${pagination.totalPages})}" aria-label="Next">
                                 <span aria-hidden="true">&gt;&gt;</span>
                             </a>
                         </li>
                     </ul>
                 </nav>
 
-             </div>
+            </div>
             <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
                 <div class="list-group section">
                     <a href="/profile/questions" th:class="${section=='questions'}?'active list-group-item ':'list-group-item '">

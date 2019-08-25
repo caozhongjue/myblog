@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>czj'blog</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=divice-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+</head>
+<link rel="stylesheet" href="css/editormd.css">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/editormd.js"></script>
+
+<!--<script type="text/javascript" src="js/bootstrap.min.js"></script>-->
+<!--<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">-->
+<!--<link type="text/css" rel="stylesheet" href="css/bootstrap-theme.min.css">-->
+<!--最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!--可选的 Bootstrap 主题文件（一般不用引入） -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
+      integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<!--最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<body style="background-color: #efefef">
+<div style="margin: auto;">
+    <div th:insert="navigation::copy"></div>
+    <div class="container-fluid" style="background-color: white">
+        <div class="row" style="height: 100%;">
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                <h2><span class="glyphicon glyphicon-plus"></span>发表提问</h2>
+                <hr>
+                <form action="/dopublish" method="post">
+                    <div class="form-group">
+                        <label for="title">问题标题(概要简述):</label>
+                        <input type="text" class="form-control" name="title" id="title" placeholder="标题">
+                    </div>
+                    <div class="form-group">
+                        <label for="title">问题内容(详细问题内容):</label>
+<!--                        <textarea name="description" id="description" class="form-control" cols="30" rows="10"-->
+<!--                                  placeholder="内容">-->
+<!--                                </textarea>-->
+                        <div class="editormd" id="test-editormd">
+                            <textarea class="editormd-markdown-textarea" name="description"></textarea>
+                            <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                            <textarea class="editormd-html-textarea" name="text"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">添加标签:</label>
+                        <input type="text" class="form-control" id="tags" name="tags" placeholder="添加标签以,隔开">
+                    </div>
+                    <span class="alert alert-danger" th:if="${error != null}" th:text="${error}" role="alert"></span>
+                    <button type="submit" class="btn btn-success" style="float: right; margin-bottom: 15px">发布</button>
+                </form>
+            </div>
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                <h3>问题发起指南</h3>
+                问题标题:请用精简的语言描述您发布的问题,不超过25字,问题补充:详细补充您的问题内容,并确保问题描述清析直观.ok
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function() {
+            editormd("test-editormd", {
+                width   : "90%",
+                height  : 640,
+                syncScrolling : "single",
+                //你的lib目录的路径，我这边用JSP做测试的
+                path    : "/lib/",
+                //这个配置在simple.html中并没有，但是为了能够提交表单，使用这个配置可以让构造出来的HTML代码直接在第二个隐藏的textarea域中，方便post提交表单。
+                saveHTMLToTextarea : false,
+                // editorTheme : "dark",
+                //下面这一行将使用dark主题
+                /**设置主题颜色*/
+                editorTheme: "pastel-on-dark",
+                theme: "gray",
+                previewTheme: "dark",
+                dialogMaskOpacity : 0.4, //设置透明遮罩层的透明度，全局通用，默认值为0.1
+                dialogMaskBgColor : "#000",//设置透明遮罩层的背景颜色，全局通用，默认为#fff
+            });
+        });
+    </script>
+</div>
+</body>
+</html>
