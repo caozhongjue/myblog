@@ -7,9 +7,17 @@
     <meta name="viewport" content="width=divice-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 </head>
 
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/editormd.css">
-<script type="text/javascript" src="js/editormd.js"></script>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/editormd.css">
+<script type="text/javascript" src="/js/editormd.js"></script>
+<script src="/lib/marked.min.js"></script>
+<script src="/lib/prettify.min.js"></script>
+
+<script src="/lib/raphael.min.js"></script>
+<script src="/lib/underscore.min.js"></script>
+<script src="/lib/sequence-diagram.min.js"></script>
+<script src="/lib/flowchart.min.js"></script>
+<script src="/lib/jquery.flowchart.min.js"></script>
 <!--<script type="text/javascript" src="js/bootstrap.min.js"></script>-->
 <!--<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">-->
 <!--<link type="text/css" rel="stylesheet" href="css/bootstrap-theme.min.css">-->
@@ -28,36 +36,39 @@
     <div th:insert="navigation::copy"></div>
     <div class="container-fluid" style="background-color: white">
         <div class="row" style="height: 100%;">
-            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 left-div">
                 <h2><span class="glyphicon glyphicon-plus"></span>发表提问</h2>
                 <hr>
                 <form action="/dopublish" method="post">
+                    <input type="hidden" class="form-control" name="id" th:value="${question.id}" >
                     <div class="form-group">
                         <label for="title">问题标题(概要简述):</label>
-                        <input type="text" class="form-control" name="title" id="title" placeholder="标题">
+                        <input type="text" class="form-control" th:value="${question.title}" name="title" id="title" placeholder="标题">
                     </div>
                     <div class="form-group">
                         <label for="title">问题内容(详细问题内容):</label>
                         <div class="editormd" id="test-editormd">
-                            <textarea class="editormd-markdown-textarea" name="description"></textarea>
+                            <textarea class="editormd-markdown-textarea" th:text="${question.description}" name="description"></textarea>
                             <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
-                            <textarea class="editormd-html-textarea" name="text"></textarea>
+                            <textarea class="editormd-html-textarea"   name="text"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="title">添加标签:</label>
-                        <input type="text" class="form-control" id="tags" name="tags" placeholder="添加标签以,隔开">
+                        <input type="text" class="form-control" th:value="${question.tags}" id="tags" name="tags" placeholder="添加标签以,隔开">
                     </div>
                     <span class="alert alert-danger" th:if="${error != null}" th:text="${error}" role="alert"></span>
                     <button type="submit" class="btn btn-success" style="float: right; margin-bottom: 15px">发布</button>
                 </form>
             </div>
-            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 right-div">
                 <h3>问题发起指南</h3>
                 问题标题:请用精简的语言描述您发布的问题,不超过25字,问题补充:详细补充您的问题内容,并确保问题描述清析直观.ok
             </div>
         </div>
+        <div th:insert="bottom :: bottom"></div>
     </div>
+
     <script>
         $(function() {
             editormd("test-editormd", {
@@ -70,6 +81,17 @@
                 previewTheme : "dark"
             });
         });
+        $(function(){
+            var testEditormdView;
+            testEditormdView = editormd.markdownToHTML("test-editormd-view",{
+                htmlDecode      : "style,script,iframe",  // you can filter tags decode
+                emoji           : true,
+                taskList        : true,
+                tex             : true,  // 默认不解析
+                flowChart       : true,  // 默认不解析
+                sequenceDiagram : true,  // 默认不解析
+            });
+        })
     </script>
 
 

@@ -4,6 +4,7 @@ import top.caozhongjue.pojo.User;
 
 @Mapper
 public interface UserMapper {
+    //第一次授权登录时插入数据
     @Insert("insert into user (account_id,name,token,gmt_create,gmt_modified,avatar_url,gender,province,city) values (#{accountId},#{name},#{token},#{gmtCreate},#{gmtModified},#{avatarUrl},#{gender},#{province},#{city})")
     public void insert(User user);
     @Select("select * from user where token = #{token}")
@@ -11,7 +12,7 @@ public interface UserMapper {
     //通过id查询用户
     @Select("select * from user where id = #{id}")
     User findById(@Param("id") Integer id);
-    //通过accountId查询用户是否存在
+    //第一次授权登录时通过accountId查询用户是否存在
     @Select("select * from user where account_id = #{accountId}")
     User findByAcountId(@Param("accountId") String accountId);
     @Update("update user set name=#{name},token=#{token},gmt_modified=#{gmtModified},avatar_url=#{avatarUrl} where id = #{id} ")

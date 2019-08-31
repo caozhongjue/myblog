@@ -33,17 +33,29 @@
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 <body >
-<div style="margin: auto;padding: 0px 10px 0px 10px;background-color: #000000">
+<div style="margin: auto;padding: 0px 10px 0px 10px;">
     <div th:insert="navigation::copy"></div>
     <div class="container-fluid" style="background-color: white">
         <div class="row" style="height: 100%;">
             <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 left-div">
                     <h2 style="padding-left: 10px; margin-top: 10px;text-align: center;" th:text="${questionDTO.title}"></h2>
-                    <label style="padding-left: 10px">问题内容(详细问题内容):</label>
+                    <span class="text-desc1">
+                        作者：<span th:text="${questionDTO.user.name}"></span>&nbsp;&nbsp;&nbsp;
+                        发布时间：<span th:text="${questionDTO.gmtCreate}"></span>&nbsp;&nbsp;&nbsp;
+                        阅读数：<span th:text="${questionDTO.viewCount}"></span>&nbsp;&nbsp;&nbsp;
+                    </span>
+                    <hr>
                     <div id="test-editormd-view">
                         <textarea id="append-test" style="display:none;" th:text="${questionDTO.description}"></textarea>
 
                     </div>
+                    <hr style="margin-bottom: 10px;"/>
+                    <a th:href="@{'/publish/'+${questionDTO.id}}" th:if="${session.user != null && session.user.id == questionDTO.creator}">
+                        <div style="display: flex;flex-direction: row;">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                            <span style="display: block;text-align: right;margin-bottom: 10px;padding:0px 10px">编辑</span>
+                        </div>
+                    </a>
             </div>
             <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 right-div" >
                 <div>
@@ -58,6 +70,7 @@
 
         </div>
     </div>
+    <div th:insert="bottom :: bottom"></div>
     <script type="text/javascript">
         $(function() {
             var testEditormdView;
@@ -70,7 +83,9 @@
                 flowChart       : true,  // 默认不解析
                 sequenceDiagram : true,  // 默认不解析
             });
-        })</script>
+        })
+    </script>
 
+</div>
 </body>
 </html>

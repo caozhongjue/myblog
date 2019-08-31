@@ -7,6 +7,7 @@ import top.caozhongjue.dao.QuestionMapper;
 import top.caozhongjue.dao.UserMapper;
 import top.caozhongjue.dto.PaginationDTO;
 import top.caozhongjue.dto.QuestionDTO;
+import top.caozhongjue.pojo.Collect1;
 import top.caozhongjue.pojo.Question;
 import top.caozhongjue.pojo.User;
 
@@ -75,8 +76,60 @@ public class QuestionService {
         //return questionDTOList;
         return paginationDTOS;
     }
+    //问题详情页services
+    public QuestionDTO selectQuestionById(Integer id) {
+        Question question = questionMapper.selectQuestionById(id);
+        QuestionDTO questionDTO = new QuestionDTO();
+        BeanUtils.copyProperties(question,questionDTO);
+        User user = userMapper.findById(question.getCreator());
+        questionDTO.setUser(user);
+        return questionDTO;
+    }
 
-    public Question selectQuestionById(Integer id) {
-        return questionMapper.selectQuestionById(id);
+    public void incView(Integer id) {
+        questionMapper.incView(id);
+    }
+
+    public void addCollect(String id, String openid) {
+
+        questionMapper.addCollect(id,openid);
+    }
+
+    public void deleteCollect(String id, String openid) {
+        questionMapper.deleteCollect(id,openid);
+    }
+
+    public void addLike(String id) {
+        questionMapper.addLike(id);
+    }
+
+    public void deleteLike(String id) {
+        questionMapper.deleteLike(id);
+    }
+
+    public Collect1 selectCollectById(String id, String openid) {
+        return questionMapper.selectCollectById(id,openid);
+    }
+
+    public List<Question> selectMyCollectByOpenid(String openid) {
+        return questionMapper.selectMyCollectByOpenid(openid);
+    }
+
+    public void createOrUpdate(Question question,User user) {
+        if(question.getId() == null) {
+            question.setCreator(user.getId());
+//          question.setGmtCreate(System.currentTimeMillis());
+//          question.setGmtModified(question.getGmtCreate());
+            question.setGmtCreate(Long.toString(System.currentTimeMillis()));//Long类型转String
+            question.setGmtModified(Long.parseLong(question.getGmtCreate()));//String转Long类型
+            question.setCommentCount(0);
+            question.setLikeCount(0);
+            question.setViewCount(0);
+            questionMapper.create(question);
+        }else{
+            question.setCreator(user.getId());
+            question.setGmtModified(System.currentTimeMillis());//String转Long类型
+            questionMapper.createOrUpdate(question);
+        }
     }
 }

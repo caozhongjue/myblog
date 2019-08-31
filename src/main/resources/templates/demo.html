@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--//第二种：支持网站将微信登录二维码内嵌到自己页面中，用户使用微信扫码授权后通过JS将code返回给网站-->
+<div id="wxqr" class="wxqr"></div>
+
+!--//步骤1：在页面中先引入如下JS文件（支持https）：-->
+<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js" ></script>
+
+!--//步骤2：在需要使用微信登录的地方实例以下JS对象：-->
+<script type="text/javascript">
+    var obj = new WxLogin({
+    id:"wxqr",
+    appid: "wxb9e2238ff05c7bd7",
+    scope: "snsapi_login",
+    redirect_uri: "https://test.2or3m.com/newWeb/binding_phone.html",
+    state: "2or3m",
+    style: "white"
+    });
+</script>
+</body>
+</html>

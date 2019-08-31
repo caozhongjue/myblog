@@ -16,6 +16,7 @@ import top.caozhongjue.services.QuestionService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -51,5 +52,17 @@ public class IndexController {
         PaginationDTO paginationDTO = questionService.listQuestionDTO(page,size);
         model.addAttribute("paginationDTO",paginationDTO);
         return "index";
+    }
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        response.addCookie(new Cookie("token",null));
+        return "redirect:/";
+    }
+    @RequestMapping("demo")
+    public String demo(){
+
+        return "demo";
     }
 }

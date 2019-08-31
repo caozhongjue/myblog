@@ -16,6 +16,7 @@ public class QuestionController {
     //首页中按id显示数据
     @RequestMapping("/question/{id}")
     public String selectQuestionById(Model model, @PathVariable(name="id")Integer id){
+        questionService.incView(id);
         QuestionDTO questionDTO = questionService.selectQuestionById(id);
         model.addAttribute("questionDTO",questionDTO);
         return "detail";

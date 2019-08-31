@@ -3,14 +3,12 @@ package top.caozhongjue.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import top.caozhongjue.dao.QuestionMapper;
 import top.caozhongjue.dao.UserMapper;
 import top.caozhongjue.pojo.Question;
 import top.caozhongjue.pojo.User;
+import top.caozhongjue.services.QuestionService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +21,8 @@ public class PublishController {
     @Autowired
     private QuestionMapper questionMapper;
     @Autowired
+    private QuestionService questionService;
+    @Autowired
     private UserMapper userMapper;
     @RequestMapping("/publish")
     public String publish(){
@@ -30,6 +30,7 @@ public class PublishController {
     }
     @PostMapping("/dopublish")
     public String doPublish(
+            @RequestParam(value = "id",required = false)Integer id,
             @RequestParam("title")String title,
             @RequestParam("description")String description,
             @RequestParam("tags")String tags,
@@ -54,19 +55,20 @@ public class PublishController {
            model.addAttribute("error","发表文章，请登录");
            return "publish";
         }
+        question.setId(id);
         question.setTitle(title);
         question.setDescription(description);
         question.setTags(tags);
-        question.setCreator(user.getId());
-//        question.setGmtCreate(System.currentTimeMillis());
-//        question.setGmtModified(question.getGmtCreate());
-        question.setGmtCreate(Long.toString(System.currentTimeMillis()));//Long类型转String
-        question.setGmtModified(Long.parseLong(question.getGmtCreate()));//String转Long类型
-        question.setCommentCount(0);
-        question.setLikeCount(0);
-        question.setViewCount(0);
-        questionMapper.create(question);
+
+        questionService.createOrUpdate(question,user);
         return "redirect:/";
+    }
+    @RequestMapping("/publish/{id}")
+    public String editPublish(@PathVariable(name="id")Integer id,
+                              Model model) {
+        Question question = questionMapper.getById(id);
+        model.addAttribute("question",question);
+        return "publish";
     }
 
 }

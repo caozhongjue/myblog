@@ -24,7 +24,7 @@
     <div th:insert="navigation :: copy"></div>
     <div class="container-fluid profile" style="background-color: white" >
         <div class="row" style="height: 100%;">
-            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 left-div">
                 <h2><span th:text="${sectionName}"></span></h2>
                 <hr style="margin-bottom: 15px;margin-top: 15px">
                 <div class="media" th:each="listQuestion:${pagination.questions}">
@@ -34,7 +34,7 @@
                         </a>
                     </div>
                     <div class="media-body">
-                        <a th:href="@{'/indexSelectQuestionById?id='+${listQuestion.id}}">
+                        <a th:href="@{'/question/'+${listQuestion.id}}">
                             <h4 class="media-heading" th:text="${listQuestion.title}"></h4>
                         </a>
                         <span class="textdesc" th:text="${listQuestion.description}"></span><br>
@@ -89,6 +89,7 @@
             </div>
         </div>
     </div>
+    <div th:insert="bottom :: bottom"></div>
 </div>
 
 </body>
