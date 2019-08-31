@@ -1,17 +1,47 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
 .text_des{
     font-size: 12px;
     font-weight: normal;
     color: #999;
 }
 .textdesc{
-    width: 550px;
+    width:800px;
     overflow:hidden;
     text-overflow:ellipsis;
-    letter-spacing: 2px;  /*字间距*/
-    display:block;/*内联对象需加*/
-    word-break:keep-all;/* 不换行 */
-    white-space:nowrap;/* 强制在同一行内显示所有文本,直到文本结束或者遭遇 br 对象。不换行 */
+    display:-webkit-box;/*内联对象需加*/
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    word-break:break-all;/* 不换行 */
+    /*white-space:nowrap;/* 强制在同一行内显示所有文本,直到文本结束或者遭遇 br 对象。不换行 */
+
 }
 .profile .section{
     margin-top: 15px;
+}
+.left-div{
+    background: url(/img/line.gif) repeat-y right
+}
+.right-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0px;
+
+}
+.right-div div{
+    width: 160px;
+    height: 220px;
+    line-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+.right-div div h4{
+    margin: 0px 0px 10px 0px;
+
 }

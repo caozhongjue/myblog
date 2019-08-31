@@ -52,12 +52,4 @@ public class IndexController {
         model.addAttribute("paginationDTO",paginationDTO);
         return "index";
     }
-    //首页中按id显示数据
-    @RequestMapping("/indexSelectQuestionById")
-    public String selectQuestionById(Model model,@RequestParam("id")Integer id){
-        Question question = questionService.selectQuestionById(id);
-        model.addAttribute("question",question);
-        return "detail";
-    }
-
 }

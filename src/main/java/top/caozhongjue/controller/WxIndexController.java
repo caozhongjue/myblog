@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import top.caozhongjue.dao.QuestionMapper;
 import top.caozhongjue.dao.UserMapper;
 import top.caozhongjue.dto.PaginationDTO;
-import top.caozhongjue.pojo.GithubUser;
-import top.caozhongjue.pojo.Question;
-import top.caozhongjue.pojo.User;
-import top.caozhongjue.pojo.WXUser;
+import top.caozhongjue.dto.QuestionDTO;
+import top.caozhongjue.pojo.*;
 import top.caozhongjue.provider.AesCbcUtil;
 import top.caozhongjue.provider.HttpRequest;
 import top.caozhongjue.services.QuestionService;
@@ -23,6 +21,7 @@ import top.caozhongjue.services.UserService;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -64,8 +63,9 @@ public class WxIndexController {
     //小程序中按id显示数据
     @ResponseBody
     @RequestMapping("/selectQuestionById")
-    public Question selectQuestionById(@RequestParam("id")Integer id){
-        Question question = questionService.selectQuestionById(id);
+    public QuestionDTO selectQuestionById(@RequestParam("id")Integer id){
+        questionService.incView(id);
+        QuestionDTO question = questionService.selectQuestionById(id);
         return question;
     }
     @RequestMapping("/login")
@@ -141,5 +141,47 @@ public class WxIndexController {
         }
         return map;
 
+    }
+    @RequestMapping("/addCollect")
+    @ResponseBody
+    public void addCollect(@RequestParam("id")String id,@RequestParam("openid")String openid){
+        questionService.addCollect(id,openid);
+        System.out.println(id+"  "+openid);
+    }
+    @RequestMapping("/deleteCollect")
+    @ResponseBody
+    public void deleteCollect(@RequestParam("id")String id,@RequestParam("openid")String openid){
+        questionService.deleteCollect(id,openid);
+        System.out.println(id+"  "+openid);
+    }
+    @RequestMapping("/addLike")
+    @ResponseBody
+    public void addLike(@RequestParam("id")String id,@RequestParam("openid")String openid){
+        questionService.addLike(id);
+    }
+    @RequestMapping("/deleteLike")
+    @ResponseBody
+    public void  deleteLike(@RequestParam("id")String id,@RequestParam("openid")String openid){
+        questionService.deleteLike(id);
+        System.out.println(id+openid);
+    }
+    @RequestMapping("/selectCollectById")
+    @ResponseBody
+    public Map selectCollectById(@RequestParam("id")String id,@RequestParam("openid")String openid){
+        Map map = new HashMap();
+        Collect1 collet = questionService.selectCollectById(id,openid);
+        if(collet != null){
+            map.put("code",1);
+        }else{
+            map.put("code",0);
+        }
+        return map;
+    }
+    @RequestMapping("selectMyCollectByOpenid")
+    @ResponseBody
+    public List<Question> selectMyCollectByOpenid(@RequestParam("openid") String openid) {
+//      List<QuestionDTO> listQuestions = questionService.listQuestionDTO(page,size);
+        List<Question> questions = questionService.selectMyCollectByOpenid(openid);
+        return questions;
     }
 }

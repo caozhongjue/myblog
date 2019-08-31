@@ -8,7 +8,7 @@
 </head>
 <body>
 <div th:fragment="copy">
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default" style="margin-bottom: 3px">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -44,8 +44,8 @@
                         </ul>
                     </li>
                     <li th:if="${session.user==null}">
-                        <!--<a href="https://github.com/login/oauth/authorize?client_id=Iv1.a6bed9fa305789a7&state=1&redirect_uri=http://localhost:8080/callback&scope=user">登录</a>-->
-                        <a href="https://github.com/login/oauth/authorize?client_id=Iv1.e73e751aed387889&state=1&redirect_uri=https://blog.caozhongjue.top/callback&scope=user">登录</a></li>
+                        <a href="https://github.com/login/oauth/authorize?client_id=Iv1.a6bed9fa305789a7&state=1&redirect_uri=http://localhost:8080/callback&scope=user">登录</a>
+                        <!--<a href="https://github.com/login/oauth/authorize?client_id=Iv1.e73e751aed387889&state=1&redirect_uri=https://www.caozhongjue.top/callback&scope=user">登录</a>--></li>
 
                     </ul>
                 </div><!-- /.navbar-collapse -->
