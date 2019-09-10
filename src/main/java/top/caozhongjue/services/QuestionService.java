@@ -7,6 +7,7 @@ import top.caozhongjue.dao.QuestionMapper;
 import top.caozhongjue.dao.UserMapper;
 import top.caozhongjue.dto.PaginationDTO;
 import top.caozhongjue.dto.QuestionDTO;
+import top.caozhongjue.pojo.Collect;
 import top.caozhongjue.pojo.Collect1;
 import top.caozhongjue.pojo.Question;
 import top.caozhongjue.pojo.User;
@@ -90,13 +91,13 @@ public class QuestionService {
         questionMapper.incView(id);
     }
 
-    public void addCollect(String id, String openid) {
+    public void addCollect(String id, String token) {
 
-        questionMapper.addCollect(id,openid);
+        questionMapper.addCollect(id,token);
     }
 
-    public void deleteCollect(String id, String openid) {
-        questionMapper.deleteCollect(id,openid);
+    public void deleteCollect(String id, String token) {
+        questionMapper.deleteCollect(id,token);
     }
 
     public void addLike(String id) {
@@ -111,8 +112,21 @@ public class QuestionService {
         return questionMapper.selectCollectById(id,openid);
     }
 
-    public List<Question> selectMyCollectByOpenid(String openid) {
-        return questionMapper.selectMyCollectByOpenid(openid);
+    public List<QuestionDTO> selectMyCollectByOpenid(String token) {
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+        List<Collect> collects = questionMapper.selectMyCollectByOpenid(token);
+        for(Collect collect : collects){
+            List<Question> questions = userMapper.findByQId(collect.getQid());
+            for(Question question : questions) {
+                User user = userMapper.findById(question.getCreator());
+                QuestionDTO questionDTO = new QuestionDTO();
+                BeanUtils.copyProperties(question,questionDTO);
+                questionDTO.setUser(user);
+                questionDTOList.add(questionDTO);
+
+            }
+        }
+        return questionDTOList;
     }
 
     public void createOrUpdate(Question question,User user) {

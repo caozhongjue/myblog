@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Collect {
     private Integer id;
-    private String openid;
+    private String token;
     private String qid;
 
 }

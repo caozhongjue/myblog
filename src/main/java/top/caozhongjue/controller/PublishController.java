@@ -31,11 +31,15 @@ public class PublishController {
     @PostMapping("/dopublish")
     public String doPublish(
             @RequestParam(value = "id",required = false)Integer id,
-            @RequestParam("title")String title,
-            @RequestParam("description")String description,
-            @RequestParam("tags")String tags,
+            @RequestParam(value="title",required = false)String title,
+            @RequestParam(value="description",required = false)String description,
+            @RequestParam(value="tags",required = false)String tags,
             HttpServletRequest request,
             Model model){
+        model.addAttribute("id",id);
+        model.addAttribute("title",title);
+        model.addAttribute("description",description);
+        model.addAttribute("tags",tags);
         Question question = new Question();
         User user = null;
         Cookie[] cookies = request.getCookies();
@@ -67,7 +71,10 @@ public class PublishController {
     public String editPublish(@PathVariable(name="id")Integer id,
                               Model model) {
         Question question = questionMapper.getById(id);
-        model.addAttribute("question",question);
+        model.addAttribute("id",question.getId());
+        model.addAttribute("title",question.getTitle());
+        model.addAttribute("description",question.getDescription());
+        model.addAttribute("tags",question.getTags());
         return "publish";
     }
 

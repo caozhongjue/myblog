@@ -26,15 +26,15 @@ spring:
 github:
   client:
 # 本地测试用的
-      id: Iv1.a6bed9fa305789a7
-      secret: 4c552e17c30fe421401fd6d846a84e99803d19c6
+    #  id: Iv1.a6bed9fa305789a7
+    #  secret: 4c552e17c30fe421401fd6d846a84e99803d19c6
 # 上线用的
-   #    id: Iv1.e73e751aed387889
-   #    secret: a047b90c7d5b6de3bbd035c4af962482bae0177c
+     id: Iv1.e73e751aed387889
+     secret: a047b90c7d5b6de3bbd035c4af962482bae0177c
   redirect:
-       uri: http://localhost:8080/callback
+    #   uri: http://localhost:8080/callback
 #    上线地址
-   #     uri: https://www.caozhongjue.top/callback
+     uri: https://www.caozhongjue.top/callback
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

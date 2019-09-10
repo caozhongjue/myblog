@@ -3,6 +3,7 @@ package top.caozhongjue.dao;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Service;
 import top.caozhongjue.dto.PaginationDTO;
+import top.caozhongjue.pojo.Collect;
 import top.caozhongjue.pojo.Collect1;
 import top.caozhongjue.pojo.Question;
 
@@ -43,14 +44,8 @@ public interface QuestionMapper {
     Collect1 selectCollectById(@Param("id")String id, @Param("openid")String openid);
 
     //查询问题
-    @Select("select `user`.AVATAR_URL,question.id,title,description,question.gmt_modified,creator,comment_count,view_count,like_count,tags ,date_format(FROM_UNIXTIME(question.GMT_CREATE/1000),'%Y-%m-%d') \n" +
-            "as gmt_create  from question \n" +
-            "            join collect \n" +
-            "            on question.id = collect.qid\n" +
-            "            join user \n" +
-            "            on `user`.ID = question.CREATOR\n" +
-            "            where collect.openid = #{openid}")
-    List<Question> selectMyCollectByOpenid(@Param("openid") String openid);
+    @Select("select * from collect where openid = #{openid}")
+    List<Collect> selectMyCollectByOpenid(@Param("openid") String openid);
     //编辑问题，通过id
     @Select("select id,title,description,gmt_modified,creator,comment_count,view_count,like_count,tags ,date_format(FROM_UNIXTIME(GMT_CREATE/1000),'%Y-%m-%d') as gmt_create from question where id = #{id}")
     Question getById(@Param("id")Integer id);

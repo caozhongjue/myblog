@@ -1,6 +1,9 @@
 package top.caozhongjue.dao;
 import org.apache.ibatis.annotations.*;
+import top.caozhongjue.pojo.Question;
 import top.caozhongjue.pojo.User;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -17,5 +20,6 @@ public interface UserMapper {
     User findByAcountId(@Param("accountId") String accountId);
     @Update("update user set name=#{name},token=#{token},gmt_modified=#{gmtModified},avatar_url=#{avatarUrl} where id = #{id} ")
     void update(User user);
-
+    @Select("select id,title,description,gmt_modified,creator,comment_count,view_count,like_count,tags ,date_format(FROM_UNIXTIME(GMT_CREATE/1000),'%Y-%m-%d') as gmt_create from question  where id = #{qid} ORDER BY gmt_create desc")
+    List<Question> findByQId(@Param("qid") String qid);
 }

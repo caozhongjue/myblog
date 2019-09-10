@@ -2,12 +2,14 @@ package top.caozhongjue.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.auth0.jwt.JWT;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import top.caozhongjue.dao.QuestionMapper;
 import top.caozhongjue.dao.UserMapper;
 import top.caozhongjue.dto.PaginationDTO;
@@ -17,6 +19,8 @@ import top.caozhongjue.provider.AesCbcUtil;
 import top.caozhongjue.provider.HttpRequest;
 import top.caozhongjue.services.QuestionService;
 import top.caozhongjue.services.UserService;
+import top.caozhongjue.services.WxAccountService;
+import top.caozhongjue.services.WxAppletService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -29,13 +33,14 @@ import java.util.UUID;
 public class WxIndexController {
     @Autowired
     private UserMapper userMapper;
-
     @Autowired
     private QuestionMapper questionMapper;
     @Autowired
     private QuestionService questionService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private WxAppletService wxAppletService;
     //小程序首页显示所有数据
     @ResponseBody
     @RequestMapping("/main")
@@ -55,9 +60,7 @@ public class WxIndexController {
                 }
             }
         }
-//      List<QuestionDTO> listQuestions = questionService.listQuestionDTO(page,size);
         PaginationDTO paginationDTO = questionService.listQuestionDTO(page,size);
-
         return paginationDTO;
     }
     //小程序中按id显示数据
@@ -68,107 +71,74 @@ public class WxIndexController {
         QuestionDTO question = questionService.selectQuestionById(id);
         return question;
     }
+    //小程序登录
     @RequestMapping("/login")
     @ResponseBody
-    public Map login(@RequestParam("encryptedData")String encryptedData,
-                      @RequestParam("iv")String iv,
-                      @RequestParam("code")String code){
+    public ResponseEntity login(@RequestParam("encryptedData")String encryptedData,
+                                @RequestParam("iv")String iv,
+                                @RequestParam("code")String code){
         Map map = new HashMap();
         // 登录凭证不能为空
         if (code == null || code.length() == 0) {
             map.put("status", 0);
             map.put("msg", "code 不能为空");
-            return map;
         }
-        // 小程序唯一标识 (在微信小程序管理后台获取)
-        String wxspAppid = "wx13fa6457d04c0e65";
-        // 小程序的 app secret (在微信小程序管理后台获取)
-        String wxspSecret = "a745cf0a2a3c90e727534372f968d854";
-        // 授权（必填）
-        String grant_type = "authorization_code";
-        //////////////// 1、向微信服务器 使用登录凭证 code 获取 session_key 和 openid
-        // 请求参数
-        String params = "appid=" + wxspAppid + "&secret=" + wxspSecret + "&js_code=" + code + "&grant_type="
-                + grant_type;
-        // 发送请求
-        String sr = HttpRequest.sendGet("https://api.weixin.qq.com/sns/jscode2session", params);
-        // 解析相应内容（转换成json对象）
-        JSONObject json = JSONObject.parseObject(sr);
-        // 获取会话密钥（session_key）
-        String session_key = json.get("session_key").toString();
-        // 用户的唯一标识（openid）
-        String openid = (String) json.get("openid");
-        //////////////// 2、对encryptedData加密数据进行AES解密 ////////////////
-        try {
-            String result = AesCbcUtil.decrypt(encryptedData, session_key, iv, "UTF-8");
-            System.out.println(result);
-            if (null != result && result.length() > 0) {
-                //保存数据到库里
-                WXUser wxUser = JSON.parseObject(result, WXUser.class);
-                User user = new User();
-                user.setName(wxUser.getNickName());
-                user.setAccountId(wxUser.getOpenId());
-                String token = UUID.randomUUID().toString();
-                user.setToken(token);
-                user.setAvatarUrl(wxUser.getAvatarUrl());
-                user.setGender(wxUser.getGender());
-                user.setProvince(wxUser.getProvince());
-                user.setCity(wxUser.getCity());
-                userService.createOrUpdateUser(user);
-                //返回解密的数据给小程序
-                map.put("status", 1);
-                map.put("msg", "解密成功");
-                JSONObject userInfoJSON = JSONObject.parseObject(result);
-                Map userInfo = new HashMap();
-                userInfo.put("openId", userInfoJSON.get("openId"));
-                userInfo.put("nickName", userInfoJSON.get("nickName"));
-                userInfo.put("gender", userInfoJSON.get("gender"));
-                userInfo.put("city", userInfoJSON.get("city"));
-                userInfo.put("province", userInfoJSON.get("province"));
-                userInfo.put("country", userInfoJSON.get("country"));
-                userInfo.put("avatarUrl", userInfoJSON.get("avatarUrl"));
-                // 解密unionId & openId;
-                System.out.println( userInfoJSON);
-                userInfo.put("unionId", userInfoJSON.get("unionId"));
-                map.put("userInfo", userInfo);
-
-            } else {
-                map.put("status", 0);
-                map.put("msg", "解密失败");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return map;
+        return new ResponseEntity<>(wxAppletService.wxUserLogin(encryptedData,iv,code), HttpStatus.OK);
 
     }
-    @RequestMapping("/addCollect")
+    //添加收藏
+    @RequiresAuthentication
+    @PostMapping(value="/addCollect")
     @ResponseBody
-    public void addCollect(@RequestParam("id")String id,@RequestParam("openid")String openid){
+    public void addCollect(@RequestParam("id") String id,
+                           HttpServletRequest request){
+        //获取请求头部分的Authorization
+        String token = request.getHeader("Authorization");
+        String openid = JWT.decode(token).getClaim("wxOpenId").asString();
         questionService.addCollect(id,openid);
-        System.out.println(id+"  "+openid);
     }
-    @RequestMapping("/deleteCollect")
+    //取消收藏
+    @RequiresAuthentication
+    @PostMapping("/deleteCollect")
     @ResponseBody
-    public void deleteCollect(@RequestParam("id")String id,@RequestParam("openid")String openid){
+    public void deleteCollect(@RequestParam("id") String id,
+                              HttpServletRequest request){
+        //获取请求头部分的Authorization
+        String token = request.getHeader("Authorization");
+        String openid = JWT.decode(token).getClaim("wxOpenId").asString();
         questionService.deleteCollect(id,openid);
-        System.out.println(id+"  "+openid);
     }
-    @RequestMapping("/addLike")
+    //点击点赞
+    @RequiresAuthentication
+    @PostMapping(value="/addLike" )
     @ResponseBody
-    public void addLike(@RequestParam("id")String id,@RequestParam("openid")String openid){
+    public void addLike(@RequestParam("id")String id,
+                        HttpServletRequest request){
+        //获取请求头部分的Authorization
+        String token = request.getHeader("Authorization");
+        String openid = JWT.decode(token).getClaim("wxOpenId").asString();
         questionService.addLike(id);
     }
-    @RequestMapping("/deleteLike")
+    //取消点赞
+    @RequiresAuthentication
+    @PostMapping("/deleteLike")
     @ResponseBody
-    public void  deleteLike(@RequestParam("id")String id,@RequestParam("openid")String openid){
+    public void  deleteLike(@RequestParam("id")String id,
+                            HttpServletRequest request){
+        //获取请求头部分的Authorization
+        String token = request.getHeader("Authorization");
+        String openid = JWT.decode(token).getClaim("wxOpenId").asString();
         questionService.deleteLike(id);
-        System.out.println(id+openid);
     }
-    @RequestMapping("/selectCollectById")
+    @RequiresAuthentication
+    @PostMapping("/selectCollectById")
     @ResponseBody
-    public Map selectCollectById(@RequestParam("id")String id,@RequestParam("openid")String openid){
+    public Map selectCollectById(@RequestParam("id") String id,
+                                 HttpServletRequest request){
         Map map = new HashMap();
+        //获取请求头部分的Authorization
+        String token = request.getHeader("Authorization");
+        String openid = JWT.decode(token).getClaim("wxOpenId").asString();
         Collect1 collet = questionService.selectCollectById(id,openid);
         if(collet != null){
             map.put("code",1);
@@ -177,11 +147,25 @@ public class WxIndexController {
         }
         return map;
     }
+    @RequiresAuthentication
     @RequestMapping("selectMyCollectByOpenid")
     @ResponseBody
-    public List<Question> selectMyCollectByOpenid(@RequestParam("openid") String openid) {
-//      List<QuestionDTO> listQuestions = questionService.listQuestionDTO(page,size);
-        List<Question> questions = questionService.selectMyCollectByOpenid(openid);
-        return questions;
+    public Map selectMyCollectByOpenid(HttpServletRequest request) {
+        Map map = new HashMap();
+        String token = request.getHeader("Authorization");
+        String openid = JWT.decode(token).getClaim("wxOpenId").asString();
+        List<QuestionDTO> questions = questionService.selectMyCollectByOpenid(openid);
+        if (!questions.isEmpty()){
+            map.put("questions",questions);
+        }else{
+            map.put("num",0);
+        }
+        return map;
     }
+    @RequestMapping("wxcallback")
+    public String wxcallback(@RequestParam("code")String code,
+                           @RequestParam("state")String state) {
+        return null;
+    }
+
 }

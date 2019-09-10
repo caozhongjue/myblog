@@ -2,12 +2,45 @@
     margin: 0px;
     padding: 0px;
 }
+.media-row{
+    height: 150px;
+    padding: 20px 0px 20px 0px;
+    border-bottom: 1px solid #f4f4f4;
+    display: flex;
+    flex-direction: row;
+}
+
+.media-body-row{
+    height: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.media-body-row a:link{
+    color: #1C86EE;
+    text-decoration: none;
+}
+.media-body-row a:hover{
+    color: #CD5C5C;
+}
+.title{
+    height: 20px;
+}
+.desc{
+    height: 66px;
+}
+.count{
+    height: 20px;
+}
 .text_des{
     font-size: 12px;
     font-weight: normal;
     color: #999;
 
 }
+
 .text-desc1{
     font-size: 12px;
     font-weight: normal;
@@ -17,15 +50,17 @@
     text-align: center;
 }
 .textdesc{
-    width:800px;
+    font-size: 14px;
+    font-weight: normal;
+    font-family: "Meiryo UI", "Microsoft YaHei", "Malgun Gothic", "Segoe UI", "Trebuchet MS", Helvetica, "Monaco", monospace, Tahoma, STXihei, "华文细黑", STHeiti, "Helvetica Neue", "Droid Sans", "wenquanyi micro hei", FreeSans, Arimo, Arial, SimSun, "宋体", Heiti, "黑体", sans-serif;
+    height: 66px;
+    line-height: 22px;
     overflow:hidden;
     text-overflow:ellipsis;
     display:-webkit-box;/*内联对象需加*/
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     word-break:break-all;/* 不换行 */
-    /*white-space:nowrap;/* 强制在同一行内显示所有文本,直到文本结束或者遭遇 br 对象。不换行 */
-
 }
 .profile .section{
     margin-top: 15px;
